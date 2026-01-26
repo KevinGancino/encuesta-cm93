@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Encuesta Servicio Técnico | CM93</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+(function(){
+  emailjs.init("YUPi8RN6-nphAC3p-");
+})();
+</script>
+
+<style>
+.emoji-option span{
+  width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;border-radius:9999px;
+  border:3px solid transparent;
+}
+.emoji-option input:checked + span{
+  background:#fde047;border-color:#facc15;
+}
+.brand-option input:checked + div{
+  background:#fef9c3;border-color:#facc15;
+}
+</style>
+</head>
+
+<body class="min-h-screen bg-cover bg-center flex items-center justify-center p-4"
+style="background-image:url('https://images.unsplash.com/photo-1581092160562-40aa08e78837');">
+
+<div class="absolute inset-0 bg-black/60"></div>
+
+<div class="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 z-10">
+
+<!-- HEADER -->
+<div class="flex justify-between items-center mb-6 text-sm font-bold">
+  <div>ITT 1878<br><span class="text-xs text-gray-500">International Trucks & Tractors</span></div>
+  <div class="text-yellow-600 text-lg">CM93</div>
+</div>
+
+<!-- PAGE 1 -->
+<div id="page1">
+<h1 class="text-3xl font-bold text-center mb-6">Datos del Cliente</h1>
+
+<div class="space-y-4">
+<input id="clientName" class="w-full border rounded-xl p-3" placeholder="Nombre del cliente">
+<input id="machineModel" class="w-full border rounded-xl p-3" placeholder="Modelo de la máquina">
+<input id="clientLocation" class="w-full border rounded-xl p-3" placeholder="Empresa / Ubicación">
+
+<select id="interventionType" class="w-full border rounded-xl p-3">
+<option value="">Tipo de intervención</option>
+<option>Mantenimiento</option>
+<option>Avería</option>
+<option>Garantía</option>
+<option>Revisión preventiva</option>
+</select>
+</div>
+
+<h2 class="font-semibold mt-8 mb-4 text-center">Marca de la máquina</h2>
+
+<div class="grid grid-cols-2 gap-4">
+<label class="brand-option cursor-pointer">
+<input type="radio" name="brand" value="CASE" class="hidden">
+<div class="border-4 rounded-xl p-4 text-center font-bold">CASE 🚜</div>
+</label>
+
+<label class="brand-option cursor-pointer">
+<input type="radio" name="brand" value="MANITOU" class="hidden">
+<div class="border-4 rounded-xl p-4 text-center font-bold">MANITOU 🏗️</div>
+</label>
+</div>
+
+<button id="continueBtn"
+class="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl">
+Continuar
+</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="hidden">
+<h1 class="text-3xl font-bold text-center mb-8">Encuesta de Satisfacción</h1>
+
+<form id="surveyForm" class="space-y-10">
+<div id="questions"></div>
+
+<textarea id="comment" rows="3"
+class="w-full border rounded-xl p-3"
+placeholder="¿Qué podríamos haber hecho mejor? (opcional)"></textarea>
+
+<div id="criticalAlert"
+class="hidden bg-red-100 border-l-4 border-red-500 p-4 rounded-xl text-sm">
+<strong>Sentimos que hayas tenido una mala experiencia.</strong><br>
+Nos pondremos en contacto contigo para poder entender la situación
+y seguir mejorando nuestra relación.
+</div>
+
+<button type="submit"
+class="w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl">
+Enviar encuesta
+</button>
+</form>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="hidden text-center">
+<h1 class="text-3xl font-bold mb-4">Gracias por confiar en nuestro servicio técnico</h1>
+<p class="mb-4">Tu opinión nos ayuda a mejorar cada reparación.</p>
+
+<div class="bg-green-100 border border-green-400 p-4 rounded-xl text-lg font-bold">
+Código descuento: <span id="code"></span>
+</div>
+</div>
+
+</div>
+
+<script>
+// INPUTS
+const clientName = document.getElementById("clientName");
+const machineModel = document.getElementById("machineModel");
+const clientLocation = document.getElementById("clientLocation");
+const interventionType = document.getElementById("interventionType");
+
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+const page3 = document.getElementById("page3");
+
+// CONTINUAR
+document.getElementById("continueBtn").addEventListener("click", () => {
+  const brand = document.querySelector("input[name='brand']:checked");
+
+  if (
+    !clientName.value.trim() ||
+    !machineModel.value.trim() ||
+    !clientLocation.value.trim() ||
+    !interventionType.value ||
+    !brand
+  ) {
+    alert("Por favor, completa todos los campos.");
+    return;
+  }
+
+  page1.classList.add("hidden");
+  page2.classList.remove("hidden");
+});
+
+// QUESTIONS
+const emojis=[
+{e:"😡",v:1},{e:"😕",v:2},{e:"😐",v:3},{e:"🙂",v:4},{e:"😄",v:5}
+];
+
+const questionsText=[
+"Atención del equipo técnico",
+"Tiempo de reparación",
+"Calidad de la reparación",
+"Comunicación durante el proceso",
+"¿Recomendarías nuestro servicio?"
+];
+
+const qDiv=document.getElementById("questions");
+questionsText.forEach((q,i)=>{
+  qDiv.innerHTML+=`
+  <div>
+    <h2 class="font-semibold mb-3">${q}</h2>
+    <div class="flex gap-4">
+      ${emojis.map(o=>`
+      <label class="emoji-option cursor-pointer">
+        <input type="radio" name="q${i}" value="${o.v}" required class="hidden">
+        <span>${o.e}</span>
+      </label>`).join("")}
+    </div>
+  </div>`;
+});
+
+// SUBMIT
+document.getElementById("surveyForm").addEventListener("submit", e => {
+e.preventDefault();
+
+const values=[...document.querySelectorAll("input[type=radio]:checked")].map(i=>+i.value);
+const critical=values.some(v=>v<=2);
+
+if(critical){
+  document.getElementById("criticalAlert").classList.remove("hidden");
+}
+
+emailjs.send(
+  "service_k44yx7g",
+  "template_kml25wk",
+  {
+    client: clientName.value,
+    machine: machineModel.value,
+    location: clientLocation.value,
+    intervention: interventionType.value,
+    brand: document.querySelector("input[name='brand']:checked").value,
+    scores: values.join(" / "),
+    average: (values.reduce((a,b)=>a+b,0)/values.length).toFixed(2),
+    comment: comment.value || "Sin comentarios",
+    critical: critical ? "⚠️ CLIENTE CRÍTICO" : "Cliente satisfecho"
+  }
+).then(()=>{
+  page2.classList.add("hidden");
+  page3.classList.remove("hidden");
+  document.getElementById("code").textContent =
+    "CM93-" + Math.floor(100000000 + Math.random() * 900000000);
+});
+});
+</script>
+
+</body>
+</html>
