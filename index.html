@@ -1,344 +1,750 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Encuesta Servicio Técnico | CM93</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Encuesta Servicio Técnico | CM93</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-<script>
-(function(){
-  emailjs.init("YUPi8RN6-nphAC3p-");
-})();
-</script>
+  <script>
+    (function () {
+      emailjs.init("YUPi8RN6-nphAC3p-");
+    })();
+  </script>
 
-<style>
-.emoji-option span{
-  width:52px;height:52px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:30px;border-radius:9999px;
-  border:3px solid transparent;
-}
-.emoji-option input:checked + span{
-  background:#fde047;border-color:#facc15;
-}
-.brand-option input:checked + div{
-  background:#fef9c3;border-color:#facc15;
-}
-.choice-option input:checked + div{
-  background:#fef9c3;border-color:#facc15;
-}
-</style>
+  <style>
+    .emoji-option span {
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      border-radius: 9999px;
+      border: 3px solid transparent;
+      transition: 0.2s ease;
+      background: #fff;
+    }
+
+    .emoji-option input:checked + span {
+      background: #fde047;
+      border-color: #facc15;
+      transform: scale(1.05);
+    }
+
+    .brand-option input:checked + div,
+    .choice-option input:checked + div,
+    .multi-option input:checked + div {
+      background: #fef9c3;
+      border-color: #facc15;
+      box-shadow: 0 0 0 1px #facc15;
+    }
+
+    .card-section {
+      border: 1px solid #e5e7eb;
+      border-radius: 1rem;
+      padding: 1rem;
+      background: #fff;
+    }
+
+    .progress-bar {
+      transition: width 0.3s ease;
+    }
+
+    textarea,
+    input,
+    select {
+      outline: none;
+    }
+
+    .hidden-soft {
+      display: none;
+    }
+  </style>
 </head>
 
-<body class="min-h-screen bg-cover bg-center flex items-center justify-center p-4"
-style="background-image:url('https://images.unsplash.com/photo-1581092160562-40aa08e78837');">
+<body
+  class="min-h-screen bg-cover bg-center flex items-center justify-center p-4"
+  style="background-image:url('https://images.unsplash.com/photo-1581092160562-40aa08e78837');"
+>
+  <div class="absolute inset-0 bg-black/60"></div>
 
-<div class="absolute inset-0 bg-black/60"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 z-10">
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-5 text-sm font-bold">
+      <div>
+        ITT 1878<br />
+        <span class="text-xs text-gray-500">International Trucks & Tractors</span>
+      </div>
+      <div class="text-yellow-600 text-lg">CM93</div>
+    </div>
 
-<div class="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 z-10">
-
-<!-- HEADER -->
-<div class="flex justify-between items-center mb-6 text-sm font-bold">
-  <div>ITT 1878<br><span class="text-xs text-gray-500">International Trucks & Tractors</span></div>
-  <div class="text-yellow-600 text-lg">CM93</div>
-</div>
-
-<!-- PAGE 1 -->
-<div id="page1">
-  <h1 class="text-3xl font-bold text-center mb-4">Datos del Cliente</h1>
-
-  <div class="mb-6 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-xl text-sm">
-    🎁 <strong>Completa la encuesta</strong> y recibe un <strong>5% extra</strong> en tu próxima intervención.
-  </div>
-
-  <div class="space-y-4">
-    <input id="clientName" class="w-full border rounded-xl p-3" placeholder="Nombre del cliente">
-    <input id="machineModel" class="w-full border rounded-xl p-3" placeholder="Modelo de la máquina">
-    <input id="clientLocation" class="w-full border rounded-xl p-3" placeholder="Empresa / Ubicación">
-
-    <!-- NUEVO: Email del cliente (para enviar info automática) -->
-    <input id="clientEmail" type="email" class="w-full border rounded-xl p-3"
-           placeholder="Email del cliente (para enviar info)">
-
-    <select id="interventionType" class="w-full border rounded-xl p-3">
-      <option value="">Tipo de intervención</option>
-      <option>Mantenimiento</option>
-      <option>Avería</option>
-      <option>Garantía</option>
-      <option>Revisión preventiva</option>
-    </select>
-  </div>
-
-  <h2 class="font-semibold mt-8 mb-4 text-center">Marca de la máquina</h2>
-
-  <div class="grid grid-cols-2 gap-4">
-    <label class="brand-option cursor-pointer">
-      <input type="radio" name="brand" value="CASE" class="hidden">
-      <div class="border-4 rounded-xl p-4 text-center font-bold">CASE 🚜</div>
-    </label>
-
-    <label class="brand-option cursor-pointer">
-      <input type="radio" name="brand" value="MANITOU" class="hidden">
-      <div class="border-4 rounded-xl p-4 text-center font-bold">MANITOU 🏗️</div>
-    </label>
-  </div>
-
-  <button id="continueBtn"
-    class="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl">
-    Continuar
-  </button>
-</div>
-
-<!-- PAGE 2 -->
-<div id="page2" class="hidden">
-  <h1 class="text-3xl font-bold text-center mb-8">Encuesta de Satisfacción</h1>
-
-  <form id="surveyForm" class="space-y-10">
-    <div id="questions"></div>
-
-    <!-- Pregunta extra: preventiva -->
-    <div>
-      <h2 class="font-semibold mb-3">¿Te interesaría recibir una revisión preventiva programada?</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <label class="choice-option cursor-pointer">
-          <input type="radio" name="preventive" value="Sí" required class="hidden">
-          <div class="border-2 rounded-xl p-3 text-center font-bold hover:bg-gray-50">Sí</div>
-        </label>
-        <label class="choice-option cursor-pointer">
-          <input type="radio" name="preventive" value="Tal vez" required class="hidden">
-          <div class="border-2 rounded-xl p-3 text-center font-bold hover:bg-gray-50">Tal vez</div>
-        </label>
-        <label class="choice-option cursor-pointer">
-          <input type="radio" name="preventive" value="No" required class="hidden">
-          <div class="border-2 rounded-xl p-3 text-center font-bold hover:bg-gray-50">No</div>
-        </label>
+    <!-- PROGRESS -->
+    <div class="mb-6">
+      <div class="flex justify-between text-xs text-gray-500 mb-2">
+        <span id="stepLabel">Paso 1 de 4</span>
+        <span id="stepPercent">25%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div id="progressBar" class="progress-bar bg-yellow-500 h-3 rounded-full" style="width:25%"></div>
       </div>
     </div>
 
-    <textarea id="comment" rows="3"
-      class="w-full border rounded-xl p-3"
-      placeholder="¿Qué podríamos haber hecho mejor? (opcional)"></textarea>
+    <!-- PAGE 1 -->
+    <section id="page1">
+      <h1 class="text-3xl font-bold text-center mb-4">Datos del Cliente</h1>
 
-    <div id="criticalAlert"
-      class="hidden bg-red-100 border-l-4 border-red-500 p-4 rounded-xl text-sm">
-      <strong>Sentimos que hayas tenido una mala experiencia.</strong><br>
-      Nos pondremos en contacto contigo en breve para entender la situación y mejorar.
-    </div>
+      <div class="mb-6 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-xl text-sm">
+        🎁 <strong>Completa la encuesta</strong> y recibe un <strong>5% extra</strong> en tu próxima intervención.
+      </div>
 
-    <button type="submit"
-      class="w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl">
-      Enviar encuesta
-    </button>
-  </form>
-</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input id="clientName" class="w-full border rounded-xl p-3" placeholder="Nombre del cliente *" />
+        <input id="machineModel" class="w-full border rounded-xl p-3" placeholder="Modelo de la máquina *" />
 
-<!-- PAGE 3 -->
-<div id="page3" class="hidden text-center">
-  <h1 class="text-3xl font-bold mb-4">Gracias por confiar en nuestro servicio técnico</h1>
-  <p class="mb-4">Tu opinión nos ayuda a mejorar cada reparación.</p>
+        <input id="clientLocation" class="w-full border rounded-xl p-3" placeholder="Empresa / Ubicación *" />
+        <input id="clientEmail" type="email" class="w-full border rounded-xl p-3" placeholder="Email del cliente (opcional)" />
 
-  <div class="bg-green-100 border border-green-400 p-4 rounded-xl text-lg font-bold">
-    Código descuento: <span id="code"></span>
+        <select id="interventionType" class="w-full border rounded-xl p-3">
+          <option value="">Tipo de intervención *</option>
+          <option>Mantenimiento</option>
+          <option>Avería</option>
+          <option>Garantía</option>
+          <option>Revisión preventiva</option>
+          <option>Diagnóstico</option>
+          <option>Recambios</option>
+          <option>Otro</option>
+        </select>
+
+        <select id="machineUse" class="w-full border rounded-xl p-3">
+          <option value="">Uso de la máquina *</option>
+          <option>Obra</option>
+          <option>Agrícola / Ganadero</option>
+          <option>Industrial</option>
+          <option>Alquiler</option>
+          <option>Uso interno empresa</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <h2 class="font-semibold mt-8 mb-4 text-center">Marca de la máquina *</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label class="brand-option cursor-pointer">
+          <input type="radio" name="brand" value="CASE" class="hidden" />
+          <div class="border-4 rounded-xl p-4 text-center font-bold">CASE 🚜</div>
+        </label>
+
+        <label class="brand-option cursor-pointer">
+          <input type="radio" name="brand" value="MANITOU" class="hidden" />
+          <div class="border-4 rounded-xl p-4 text-center font-bold">MANITOU 🏗️</div>
+        </label>
+      </div>
+
+      <button
+        id="continueBtn1"
+        class="mt-8 w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl"
+      >
+        Continuar
+      </button>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section id="page2" class="hidden">
+      <h1 class="text-3xl font-bold text-center mb-6">Valora tu experiencia</h1>
+
+      <div class="mb-4 text-sm text-gray-600 text-center">
+        Queremos entender no solo si has quedado satisfecho, sino también
+        <strong>dónde podemos mejorar de verdad</strong>.
+      </div>
+
+      <form id="surveyFormStep2" class="space-y-6">
+        <div class="card-section">
+          <h2 class="text-lg font-bold mb-4">1. Valoración general</h2>
+          <div id="questions" class="space-y-6"></div>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            type="button"
+            id="backBtn2"
+            class="w-1/3 border border-gray-300 hover:bg-gray-50 font-bold py-3 rounded-xl"
+          >
+            Atrás
+          </button>
+          <button
+            type="submit"
+            class="w-2/3 bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl"
+          >
+            Continuar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- PAGE 3 -->
+    <section id="page3" class="hidden">
+      <h1 class="text-3xl font-bold text-center mb-6">Detectemos puntos de mejora</h1>
+
+      <form id="surveyFormStep3" class="space-y-6">
+        <div class="card-section">
+          <h2 class="text-lg font-bold mb-4">2. Dónde ha estado el problema</h2>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿Qué ha sido lo más frustrante del proceso? *</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="painPoints" value="Tiempo de espera" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Tiempo de espera</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="painPoints" value="Falta de información" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Falta de información</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="painPoints" value="Retraso de piezas" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Retraso de piezas</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="painPoints" value="Presupuesto / coste" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Presupuesto / coste</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="painPoints" value="Tener que llamar varias veces" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Tener que llamar varias veces</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="painPoints" value="Ninguno" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Ninguno</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿En qué punto del proceso has tenido más dificultad? *</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="processDifficulty" value="Antes de traer la máquina" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Antes de traer la máquina</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="processDifficulty" value="Esperando diagnóstico / presupuesto" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Esperando diagnóstico / presupuesto</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="processDifficulty" value="Esperando piezas" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Esperando piezas</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="processDifficulty" value="Durante la reparación" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Durante la reparación</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="processDifficulty" value="Comunicación / seguimiento" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Comunicación / seguimiento</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="processDifficulty" value="Entrega final / cierre" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Entrega final / cierre</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿El tiempo de reparación ha sido? *</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="repairExpectation" value="Más rápido de lo esperado" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center">Más rápido de lo esperado</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="repairExpectation" value="Dentro de lo esperado" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center">Dentro de lo esperado</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="repairExpectation" value="Más lento de lo esperado" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center">Más lento de lo esperado</div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            type="button"
+            id="backBtn3"
+            class="w-1/3 border border-gray-300 hover:bg-gray-50 font-bold py-3 rounded-xl"
+          >
+            Atrás
+          </button>
+          <button
+            type="submit"
+            class="w-2/3 bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl"
+          >
+            Continuar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- PAGE 4 -->
+    <section id="page4" class="hidden">
+      <h1 class="text-3xl font-bold text-center mb-6">Innovación y mejora del servicio</h1>
+
+      <form id="finalSurveyForm" class="space-y-6">
+        <div class="card-section">
+          <h2 class="text-lg font-bold mb-4">3. Qué valoraría más tu empresa</h2>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿Qué mejoras digitales te aportarían más valor? (puedes marcar varias) *</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="digitalNeeds" value="Ver estado de la máquina en tiempo real" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Ver estado de la máquina en tiempo real</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="digitalNeeds" value="Recibir fotos o vídeos de la reparación" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Recibir fotos o vídeos de la reparación</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="digitalNeeds" value="Aprobar presupuestos online" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Aprobar presupuestos online</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="digitalNeeds" value="Avisos automáticos de mantenimiento" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Avisos automáticos de mantenimiento</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="digitalNeeds" value="Seguimiento automático por WhatsApp o email" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Seguimiento automático por WhatsApp o email</div>
+              </label>
+              <label class="multi-option cursor-pointer">
+                <input type="checkbox" name="digitalNeeds" value="Histórico digital de reparaciones" class="hidden" />
+                <div class="border-2 rounded-xl p-3">Histórico digital de reparaciones</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿Te interesaría recibir una revisión preventiva programada? *</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="preventive" value="Sí" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center font-bold">Sí</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="preventive" value="Tal vez" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center font-bold">Tal vez</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="preventive" value="No" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center font-bold">No</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿Pagarías por un servicio prioritario si redujera tiempos de espera? *</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="priorityService" value="Sí" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center font-bold">Sí</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="priorityService" value="Depende del coste" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center font-bold">Depende del coste</div>
+              </label>
+              <label class="choice-option cursor-pointer">
+                <input type="radio" name="priorityService" value="No" class="hidden" />
+                <div class="border-2 rounded-xl p-3 text-center font-bold">No</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿Qué podríamos haber hecho mejor? *</h3>
+            <textarea
+              id="comment"
+              rows="4"
+              class="w-full border rounded-xl p-3"
+              placeholder="Escribe aquí tu opinión. Nos interesa saber qué mejorarías de verdad."
+            ></textarea>
+          </div>
+
+          <div class="mb-5">
+            <h3 class="font-semibold mb-3">¿Qué es lo que más has valorado de nuestro servicio?</h3>
+            <textarea
+              id="bestValue"
+              rows="3"
+              class="w-full border rounded-xl p-3"
+              placeholder="Ejemplo: rapidez, atención, claridad, reparación, etc."
+            ></textarea>
+          </div>
+
+          <div
+            id="criticalAlert"
+            class="hidden bg-red-100 border-l-4 border-red-500 p-4 rounded-xl text-sm mb-4"
+          >
+            <strong>Sentimos que tu experiencia no haya sido la esperada.</strong><br />
+            Hemos marcado tu caso para revisión prioritaria.
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            type="button"
+            id="backBtn4"
+            class="w-1/3 border border-gray-300 hover:bg-gray-50 font-bold py-3 rounded-xl"
+          >
+            Atrás
+          </button>
+          <button
+            type="submit"
+            class="w-2/3 bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-xl"
+          >
+            Enviar encuesta
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- PAGE 5 -->
+    <section id="page5" class="hidden text-center">
+      <h1 class="text-3xl font-bold mb-4">Gracias por confiar en nuestro servicio técnico</h1>
+      <p class="mb-4">Tu opinión nos ayuda a mejorar cada reparación y cada proceso.</p>
+
+      <div class="bg-green-100 border border-green-400 p-4 rounded-xl text-lg font-bold">
+        Código descuento: <span id="code"></span>
+      </div>
+
+      <p id="actionMsg" class="mt-4 text-sm text-gray-700"></p>
+
+      <div class="mt-6 text-sm text-gray-500">
+        Hemos registrado tu respuesta correctamente.
+      </div>
+    </section>
   </div>
 
-  <p id="actionMsg" class="mt-4 text-sm text-gray-700"></p>
-</div>
+  <script>
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+    const page3 = document.getElementById("page3");
+    const page4 = document.getElementById("page4");
+    const page5 = document.getElementById("page5");
 
-</div>
+    const progressBar = document.getElementById("progressBar");
+    const stepLabel = document.getElementById("stepLabel");
+    const stepPercent = document.getElementById("stepPercent");
 
-<script>
-// INPUTS
-const clientName = document.getElementById("clientName");
-const machineModel = document.getElementById("machineModel");
-const clientLocation = document.getElementById("clientLocation");
-const clientEmail = document.getElementById("clientEmail");
-const interventionType = document.getElementById("interventionType");
+    const clientName = document.getElementById("clientName");
+    const machineModel = document.getElementById("machineModel");
+    const clientLocation = document.getElementById("clientLocation");
+    const clientEmail = document.getElementById("clientEmail");
+    const interventionType = document.getElementById("interventionType");
+    const machineUse = document.getElementById("machineUse");
+    const comment = document.getElementById("comment");
+    const bestValue = document.getElementById("bestValue");
+    const actionMsg = document.getElementById("actionMsg");
 
-const page1 = document.getElementById("page1");
-const page2 = document.getElementById("page2");
-const page3 = document.getElementById("page3");
+    const emojis = [
+      { e: "😡", v: 1 },
+      { e: "😕", v: 2 },
+      { e: "😐", v: 3 },
+      { e: "🙂", v: 4 },
+      { e: "😄", v: 5 }
+    ];
 
-const actionMsg = document.getElementById("actionMsg");
+    const questionsText = [
+      "Atención del equipo técnico",
+      "Tiempo de reparación",
+      "Calidad de la reparación",
+      "Comunicación durante el proceso",
+      "¿Recomendarías nuestro servicio?"
+    ];
 
-// CONTINUAR
-document.getElementById("continueBtn").addEventListener("click", () => {
-  const brand = document.querySelector("input[name='brand']:checked");
+    const qDiv = document.getElementById("questions");
 
-  if (
-    !clientName.value.trim() ||
-    !machineModel.value.trim() ||
-    !clientLocation.value.trim() ||
-    !interventionType.value ||
-    !brand
-  ) {
-    alert("Por favor, completa todos los campos obligatorios.");
-    return;
-  }
+    questionsText.forEach((q, i) => {
+      qDiv.innerHTML += `
+        <div>
+          <h2 class="font-semibold mb-3">${q}</h2>
+          <div class="flex flex-wrap gap-4">
+            ${emojis.map(o => `
+              <label class="emoji-option cursor-pointer">
+                <input type="radio" name="q${i}" value="${o.v}" class="hidden">
+                <span>${o.e}</span>
+              </label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    });
 
-  page1.classList.add("hidden");
-  page2.classList.remove("hidden");
-});
+    function updateProgress(step) {
+      const map = {
+        1: { width: "25%", label: "Paso 1 de 4", percent: "25%" },
+        2: { width: "50%", label: "Paso 2 de 4", percent: "50%" },
+        3: { width: "75%", label: "Paso 3 de 4", percent: "75%" },
+        4: { width: "100%", label: "Paso 4 de 4", percent: "100%" }
+      };
 
-// QUESTIONS
-const emojis=[
-  {e:"😡",v:1},{e:"😕",v:2},{e:"😐",v:3},{e:"🙂",v:4},{e:"😄",v:5}
-];
-
-const questionsText=[
-  "Atención del equipo técnico",
-  "Tiempo de reparación",
-  "Calidad de la reparación",
-  "Comunicación durante el proceso",
-  "¿Recomendarías nuestro servicio?"
-];
-
-const qDiv=document.getElementById("questions");
-questionsText.forEach((q,i)=>{
-  qDiv.innerHTML+=`
-  <div>
-    <h2 class="font-semibold mb-3">${q}</h2>
-    <div class="flex gap-4">
-      ${emojis.map(o=>`
-      <label class="emoji-option cursor-pointer">
-        <input type="radio" name="q${i}" value="${o.v}" required class="hidden">
-        <span>${o.e}</span>
-      </label>`).join("")}
-    </div>
-  </div>`;
-});
-
-// Helpers
-function generateDiscountCode(){
-  return "CM93-" + Math.floor(100000000 + Math.random() * 900000000);
-}
-
-function computeCritical(values){
-  return values.some(v => v <= 2);
-}
-
-// ACTION DISPATCHER (estratégico)
-async function dispatchActions({critical, preventiveInterest, basePayload}){
-  const actions = [];
-
-  // 🔴 Cliente insatisfecho -> llamada en 48h (email interno urgente)
-  if (critical) {
-    actions.push(emailjs.send(
-      "service_k44yx7g",
-      "template_kml25wk",
-      {
-        ...basePayload,
-        action: "🔴 ACCIÓN: Cliente insatisfecho. Llamar en 48h.",
-        priority: "ALTA"
-      }
-    ));
-    actionMsg.textContent = "Hemos registrado tu respuesta. Un responsable se pondrá en contacto contigo en menos de 48h.";
-    return Promise.allSettled(actions);
-  }
-
-  // 🟢 Preventiva = Sí -> tarea a comercial
-  if (preventiveInterest === "Sí") {
-    actions.push(emailjs.send(
-      "service_k44yx7g",
-      "template_kml25wk",
-      {
-        ...basePayload,
-        action: "🟢 ACCIÓN: Cliente interesado en revisión preventiva. Crear tarea comercial y contactar.",
-        priority: "MEDIA"
-      }
-    ));
-    actionMsg.textContent = "Perfecto. Hemos registrado tu interés y te contactaremos para programar una revisión preventiva.";
-    return Promise.allSettled(actions);
-  }
-
-  // 🟡 Preventiva = Tal vez -> email informativo + seguimiento 7 días
-  if (preventiveInterest === "Tal vez") {
-    // 1) Seguimiento interno en 7 días
-    actions.push(emailjs.send(
-      "service_k44yx7g",
-      "template_kml25wk",
-      {
-        ...basePayload,
-        action: "🟡 ACCIÓN: Cliente 'Tal vez' preventiva. Programar seguimiento en 7 días.",
-        priority: "BAJA"
-      }
-    ));
-
-    // 2) Email informativo al cliente (solo si dejó email)
-    if (clientEmail.value.trim()) {
-      actions.push(emailjs.send(
-        "service_k44yx7g",
-        "template_kml25wk",
-        {
-          ...basePayload,
-          to_email: clientEmail.value.trim(),
-          action: "🟡 INFO AL CLIENTE: Enviar información sobre revisión preventiva programada.",
-          priority: "INFO"
-        }
-      ));
+      progressBar.style.width = map[step].width;
+      stepLabel.textContent = map[step].label;
+      stepPercent.textContent = map[step].percent;
     }
 
-    actionMsg.textContent = "Gracias. Te enviaremos información sobre la revisión preventiva y haremos seguimiento en unos días.";
-    return Promise.allSettled(actions);
-  }
+    function showPage(pageToShow) {
+      [page1, page2, page3, page4, page5].forEach(p => p.classList.add("hidden"));
+      pageToShow.classList.remove("hidden");
 
-  // Preventiva = No -> sin acción extra
-  actionMsg.textContent = "Gracias. Hemos registrado tu respuesta.";
-  return Promise.allSettled(actions);
-}
+      if (pageToShow === page1) updateProgress(1);
+      if (pageToShow === page2) updateProgress(2);
+      if (pageToShow === page3) updateProgress(3);
+      if (pageToShow === page4) updateProgress(4);
 
-// SUBMIT
-document.getElementById("surveyForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+      if (pageToShow === page5) {
+        progressBar.style.width = "100%";
+        stepLabel.textContent = "Encuesta completada";
+        stepPercent.textContent = "100%";
+      }
+    }
 
-  const brand = document.querySelector("input[name='brand']:checked")?.value || "";
-  const preventiveInterest = document.querySelector("input[name='preventive']:checked")?.value || "No indicado";
+    function validatePage1() {
+      const brand = document.querySelector("input[name='brand']:checked");
 
-  const values=[...document.querySelectorAll("input[type=radio][name^='q']:checked")].map(i=>+i.value);
-  const critical = computeCritical(values);
+      if (
+        !clientName.value.trim() ||
+        !machineModel.value.trim() ||
+        !clientLocation.value.trim() ||
+        !interventionType.value ||
+        !machineUse.value ||
+        !brand
+      ) {
+        alert("Por favor, completa todos los campos obligatorios.");
+        return false;
+      }
 
-  if(critical){
-    document.getElementById("criticalAlert").classList.remove("hidden");
-  }
+      return true;
+    }
 
-  const avg = (values.reduce((a,b)=>a+b,0)/values.length).toFixed(2);
-  const discountCode = generateDiscountCode();
+    function validateEmojiQuestions() {
+      for (let i = 0; i < questionsText.length; i++) {
+        if (!document.querySelector(`input[name="q${i}"]:checked`)) {
+          alert("Por favor, responde todas las valoraciones.");
+          return false;
+        }
+      }
+      return true;
+    }
 
-  // Payload común (para emails internos y/o cliente)
-  const basePayload = {
-    client: clientName.value,
-    machine: machineModel.value,
-    location: clientLocation.value,
-    intervention: interventionType.value,
-    brand: brand,
-    scores: values.join(" / "),
-    average: avg,
-    comment: comment.value || "Sin comentarios",
-    critical: critical ? "⚠️ CLIENTE CRÍTICO" : "Cliente satisfecho",
-    preventive_interest: preventiveInterest,
-    discount_code: discountCode,
-    client_email: clientEmail.value.trim() || "No informado"
-  };
+    function validateStep3() {
+      const painPoints = [...document.querySelectorAll('input[name="painPoints"]:checked')];
+      const processDifficulty = document.querySelector('input[name="processDifficulty"]:checked');
+      const repairExpectation = document.querySelector('input[name="repairExpectation"]:checked');
 
-  // 1) Enviar resumen principal (siempre)
-  try{
-    await emailjs.send("service_k44yx7g", "template_kml25wk", basePayload);
-  }catch(err){
-    alert("Error enviando la encuesta. Revisa conexión o configuración EmailJS.");
-    return;
-  }
+      if (!painPoints.length) {
+        alert("Selecciona al menos una opción en 'lo más frustrante del proceso'.");
+        return false;
+      }
 
-  // 2) Disparar acciones automáticas según respuestas
-  await dispatchActions({critical, preventiveInterest, basePayload});
+      if (!processDifficulty || !repairExpectation) {
+        alert("Por favor, completa todas las preguntas de esta sección.");
+        return false;
+      }
 
-  // 3) Mostrar final
-  page2.classList.add("hidden");
-  page3.classList.remove("hidden");
-  document.getElementById("code").textContent = discountCode;
-});
-</script>
+      return true;
+    }
 
+    function validateStep4() {
+      const digitalNeeds = [...document.querySelectorAll('input[name="digitalNeeds"]:checked')];
+      const preventive = document.querySelector('input[name="preventive"]:checked');
+      const priorityService = document.querySelector('input[name="priorityService"]:checked');
+
+      if (!digitalNeeds.length) {
+        alert("Selecciona al menos una mejora digital de valor.");
+        return false;
+      }
+
+      if (!preventive || !priorityService) {
+        alert("Por favor, completa todas las preguntas obligatorias.");
+        return false;
+      }
+
+      if (!comment.value.trim()) {
+        alert("Escribe qué podríamos haber hecho mejor.");
+        comment.focus();
+        return false;
+      }
+
+      return true;
+    }
+
+    function generateDiscountCode() {
+      return "CM93-" + Math.floor(100000000 + Math.random() * 900000000);
+    }
+
+    function computeCritical(values, painPoints, repairExpectation) {
+      const lowScores = values.filter(v => v <= 2).length;
+      const hasSeverePain =
+        painPoints.includes("Falta de información") ||
+        painPoints.includes("Tener que llamar varias veces") ||
+        painPoints.includes("Tiempo de espera") ||
+        painPoints.includes("Retraso de piezas");
+
+      return lowScores >= 2 || repairExpectation === "Más lento de lo esperado" || hasSeverePain;
+    }
+
+    function getCheckedValues(name) {
+      return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
+    }
+
+    function getSingleValue(name) {
+      return document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+    }
+
+    async function dispatchActions(payload) {
+      const actions = [];
+
+      if (payload.critical === "⚠️ CLIENTE CRÍTICO") {
+        actions.push(
+          emailjs.send("service_k44yx7g", "template_kml25wk", {
+            ...payload,
+            action: "🔴 ACCIÓN: Cliente crítico. Revisar caso y llamar en menos de 48h.",
+            priority: "ALTA"
+          })
+        );
+        actionMsg.textContent =
+          "Hemos registrado tu respuesta. Un responsable revisará tu caso y te contactará en breve.";
+        return Promise.allSettled(actions);
+      }
+
+      if (payload.preventive_interest === "Sí") {
+        actions.push(
+          emailjs.send("service_k44yx7g", "template_kml25wk", {
+            ...payload,
+            action: "🟢 ACCIÓN: Cliente interesado en revisión preventiva. Crear seguimiento comercial.",
+            priority: "MEDIA"
+          })
+        );
+        actionMsg.textContent =
+          "Perfecto. Hemos registrado tu interés y podremos contactarte para una revisión preventiva.";
+        return Promise.allSettled(actions);
+      }
+
+      if (payload.preventive_interest === "Tal vez") {
+        actions.push(
+          emailjs.send("service_k44yx7g", "template_kml25wk", {
+            ...payload,
+            action: "🟡 ACCIÓN: Cliente 'Tal vez' preventiva. Programar seguimiento en 7 días.",
+            priority: "BAJA"
+          })
+        );
+
+        if (clientEmail.value.trim()) {
+          actions.push(
+            emailjs.send("service_k44yx7g", "template_kml25wk", {
+              ...payload,
+              to_email: clientEmail.value.trim(),
+              action: "🟡 INFO CLIENTE: Enviar información sobre mantenimiento preventivo.",
+              priority: "INFO"
+            })
+          );
+        }
+
+        actionMsg.textContent =
+          "Gracias. Hemos registrado tu interés y te podremos ampliar información sobre mantenimiento preventivo.";
+        return Promise.allSettled(actions);
+      }
+
+      actionMsg.textContent = "Gracias. Hemos registrado tu respuesta correctamente.";
+      return Promise.allSettled(actions);
+    }
+
+    document.getElementById("continueBtn1").addEventListener("click", () => {
+      if (!validatePage1()) return;
+      showPage(page2);
+    });
+
+    document.getElementById("backBtn2").addEventListener("click", () => showPage(page1));
+    document.getElementById("backBtn3").addEventListener("click", () => showPage(page2));
+    document.getElementById("backBtn4").addEventListener("click", () => showPage(page3));
+
+    document.getElementById("surveyFormStep2").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!validateEmojiQuestions()) return;
+      showPage(page3);
+    });
+
+    document.getElementById("surveyFormStep3").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!validateStep3()) return;
+      showPage(page4);
+    });
+
+    document.getElementById("finalSurveyForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!validateStep4()) return;
+
+      const brand = document.querySelector("input[name='brand']:checked")?.value || "";
+      const preventiveInterest = getSingleValue("preventive");
+      const priorityService = getSingleValue("priorityService");
+      const painPoints = getCheckedValues("painPoints");
+      const digitalNeeds = getCheckedValues("digitalNeeds");
+      const processDifficulty = getSingleValue("processDifficulty");
+      const repairExpectation = getSingleValue("repairExpectation");
+
+      const values = [...document.querySelectorAll("input[type=radio][name^='q']:checked")].map(i => +i.value);
+      const avg = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2);
+      const discountCode = generateDiscountCode();
+
+      const critical = computeCritical(values, painPoints, repairExpectation);
+
+      if (critical) {
+        document.getElementById("criticalAlert").classList.remove("hidden");
+      }
+
+      const basePayload = {
+        client: clientName.value.trim(),
+        machine: machineModel.value.trim(),
+        location: clientLocation.value.trim(),
+        intervention: interventionType.value,
+        machine_use: machineUse.value,
+        brand: brand,
+        client_email: clientEmail.value.trim() || "No informado",
+        scores: values.join(" / "),
+        q1_attention: values[0] || "",
+        q2_time: values[1] || "",
+        q3_quality: values[2] || "",
+        q4_communication: values[3] || "",
+        q5_recommendation: values[4] || "",
+        average: avg,
+        pain_points: painPoints.join(" | "),
+        process_difficulty: processDifficulty,
+        repair_expectation: repairExpectation,
+        digital_needs: digitalNeeds.join(" | "),
+        preventive_interest: preventiveInterest,
+        priority_service: priorityService,
+        comment: comment.value.trim(),
+        best_value: bestValue.value.trim() || "No indicado",
+        critical: critical ? "⚠️ CLIENTE CRÍTICO" : "Cliente no crítico",
+        discount_code: discountCode
+      };
+
+      try {
+        await emailjs.send("service_k44yx7g", "template_kml25wk", basePayload);
+      } catch (err) {
+        alert("Error enviando la encuesta. Revisa EmailJS o la conexión.");
+        return;
+      }
+
+      await dispatchActions(basePayload);
+
+      showPage(page5);
+      document.getElementById("code").textContent = discountCode;
+    });
+  </script>
 </body>
 </html>
